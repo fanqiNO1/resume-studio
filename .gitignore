@@ -1,0 +1,54 @@
+# 依赖与构建产物
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.tsbuildinfo
+
+# 测试与报告
+coverage/
+playwright-report/
+test-results/
+.playwright/
+
+# 私有工作目录（字体转换中间产物、临时草稿）
+.dev/
+
+# 下载的开源字体（scripts/prepare-fonts.sh 拉的，不入库）
+# 注意用 /fonts/ 锚定根目录，否则会连带忽略 public/fonts/（那里的 fonts.css 要入库）
+/fonts/
+
+# 生成的字体子集（由 scripts/build-fonts.py 产出，20MB+，用 pnpm run fonts 重建）
+public/fonts/generated/
+
+# 真实简历数据。
+#
+# 仓库里只保留 data.sample/（虚构人物），你的简历放在 data/ 里，**不要提交**。
+# .gitignore 里显式写这一条，是为了让「git add -A」不会顺手把简历推上去。
+data/
+
+# 原子写入的临时文件
+*.tmp
+*.json.tmp
+*.pdf.tmp
+
+# 环境与本地配置
+.env
+.env.*
+!.env.example
+*.local
+
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+
+# 日志
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*

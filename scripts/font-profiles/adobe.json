@@ -1,0 +1,23 @@
+{
+  "id": "adobe",
+  "name": "TeX Gyre Termes（拉丁）+ Adobe 宋体/黑体/楷体（中文）",
+  "licenses": "TeX Gyre Termes: OFL-1.1；Adobe Source Han 系宋体/黑体/楷体为商业字体，不可再分发。",
+  "note": "需要自行准备这三个 Adobe 字体文件（与 resume.cls 的 xeCJK 映射一致），本仓库不分发。用 --src 指向字体目录。",
+  "latin": {
+    "400": { "file": "texgyretermes-regular.otf" },
+    "700": { "file": "texgyretermes-bold.otf" },
+    "400i": { "file": "texgyretermes-italic.otf" },
+    "700i": { "file": "texgyretermes-bolditalic.otf" }
+  },
+  "cjk": [
+    { "role": "400", "file": "AdobeSongStd-Light.otf" },
+    { "role": "700", "file": "AdobeHeitiStd-Regular.otf" },
+    { "role": "400i", "file": "AdobeKaitiStd-Regular.otf" },
+    { "role": "700i", "file": "AdobeKaitiStd-Regular.otf" }
+  ],
+  "ui": {
+    "400": { "file": "Inter-Regular.otf" },
+    "500": { "file": "Inter-Medium.otf" },
+    "600": { "file": "Inter-SemiBold.otf" }
+  }
+}

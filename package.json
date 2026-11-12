@@ -1,0 +1,44 @@
+{
+  "name": "resume-studio",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "简历工作台：表单化编辑、A4 实时预览、投递级 PDF 导出；内容只写一份，按岗位派生多个版本",
+  "keywords": ["resume", "cv", "pdf", "latex", "vue", "typography"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanqiNO1/resume-studio.git"
+  },
+  "homepage": "https://github.com/fanqiNO1/resume-studio#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "fonts": "python3 scripts/build-fonts.py",
+    "export": "tsx scripts/export-all.ts",
+    "check:fidelity": "tsx scripts/check-fidelity.ts",
+    "icons": "tsx scripts/build-icons.ts"
+  },
+  "dependencies": {
+    "@vueuse/core": "^11.3.0",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@iconify-json/fa6-brands": "^1.2.6",
+    "@iconify-json/fa6-solid": "^1.2.4",
+    "@types/node": "^22.10.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "pdf-lib": "^1.17.1",
+    "playwright-core": "^1.49.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8",
+    "vue-tsc": "^2.1.10"
+  }
+}

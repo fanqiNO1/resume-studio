@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "通用",
+    "order": 1,
+    "targetPosition": "示例岗位",
+    "note": "完整版：所有条目展开。",
+    "public": false,
+    "filenameTemplate": "{name}-{positionName}",
+    "updatedAt": ""
+  },
+  "template": "academic-serif",
+  "density": "standard",
+  "fitScale": 1,
+  "templateOverrides": {},
+  "layout": {
+    "showPhoto": false,
+    "pageNumber": false,
+    "targetPages": 2
+  },
+  "contactInclude": [
+    "c_phone",
+    "c_mail",
+    "c_gh"
+  ],
+  "sections": [
+    {
+      "ref": "sec_edu",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_edu_ms",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_edu_bs",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_pub",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_pub_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_b",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_c",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_d",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_e",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_f",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_g",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_noauth",
+          "visible": false,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "无作者，暂不展示",
+          "render": "tight"
+        }
+      ]
+    },
+    {
+      "ref": "sec_exp",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_exp_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_exp_b",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_prj",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_prj_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_prj_b",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_prj_c",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_award",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_awd_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "pendingItems": []
+}

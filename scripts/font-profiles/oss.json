@@ -1,0 +1,61 @@
+{
+  "id": "oss",
+  "name": "TeX Gyre Termes（拉丁）+ Noto Serif/Sans SC（中文）",
+  "licenses": "TeX Gyre Termes: OFL-1.1；Noto CJK: OFL-1.1。均可自由使用与再分发。",
+  "note": "默认档案。跑 scripts/prepare-fonts.sh 可把开源字体下到 fonts/（无需 root）；也支持系统已装的 fonts-noto-cjk / tex-gyre。",
+  "latin": {
+    "400": { "file": "texgyretermes-regular.otf" },
+    "700": { "file": "texgyretermes-bold.otf" },
+    "400i": { "file": "texgyretermes-italic.otf" },
+    "700i": { "file": "texgyretermes-bolditalic.otf" }
+  },
+  "cjk": [
+    {
+      "role": "400",
+      "file": [
+        "NotoSerifSC[wght].ttf",
+        "NotoSerifSC-Regular.otf",
+        "NotoSerifCJK-Regular.ttc"
+      ],
+      "face": ["Noto Serif CJK SC"],
+      "weight": 400
+    },
+    {
+      "role": "700",
+      "file": [
+        "NotoSansSC[wght].ttf",
+        "NotoSansSC-Bold.otf",
+        "NotoSansCJK-Bold.ttc"
+      ],
+      "face": ["Noto Sans CJK SC"],
+      "weight": 700
+    },
+    {
+      "role": "400i",
+      "file": [
+        "NotoSerifSC[wght].ttf",
+        "NotoSerifSC-Regular.otf",
+        "NotoSerifCJK-Regular.ttc"
+      ],
+      "face": ["Noto Serif CJK SC"],
+      "weight": 400,
+      "slant": 0.21
+    },
+    {
+      "role": "700i",
+      "file": [
+        "NotoSerifSC[wght].ttf",
+        "NotoSerifSC-Regular.otf",
+        "NotoSerifCJK-Regular.ttc"
+      ],
+      "face": ["Noto Serif CJK SC"],
+      "weight": 400,
+      "slant": 0.21
+    }
+  ],
+  "ui": {
+    "400": { "file": "Inter-Regular.otf" },
+    "500": { "file": "Inter-Medium.otf" },
+    "600": { "file": "Inter-SemiBold.otf" }
+  }
+}

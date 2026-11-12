@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "basics": {
+    "name": "示例人",
+    "aliases": [
+      "Sample Person",
+      "示例人"
+    ],
+    "photo": "",
+    "contacts": [
+      {
+        "id": "c_phone",
+        "type": "phone",
+        "value": "000-0000-0000",
+        "sensitive": true
+      },
+      {
+        "id": "c_mail",
+        "type": "email",
+        "value": "sample@example.com",
+        "sensitive": true
+      },
+      {
+        "id": "c_gh",
+        "type": "github",
+        "value": "sample",
+        "url": "https://github.com/sample",
+        "sensitive": false
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec_edu",
+      "kind": "education",
+      "title": "教育背景",
+      "icon": "graduation-cap",
+      "itemIds": [
+        "itm_edu_ms",
+        "itm_edu_bs"
+      ]
+    },
+    {
+      "id": "sec_pub",
+      "kind": "publication",
+      "title": "论文成果",
+      "icon": "file-lines",
+      "itemIds": [
+        "itm_pub_a",
+        "itm_pub_b",
+        "itm_pub_c",
+        "itm_pub_d",
+        "itm_pub_e",
+        "itm_pub_f",
+        "itm_pub_g",
+        "itm_pub_noauth"
+      ]
+    },
+    {
+      "id": "sec_prj",
+      "kind": "project",
+      "title": "项目经历",
+      "icon": "flask",
+      "itemIds": [
+        "itm_prj_a",
+        "itm_prj_b",
+        "itm_prj_c"
+      ]
+    },
+    {
+      "id": "sec_exp",
+      "kind": "experience",
+      "title": "实习经历",
+      "icon": "building-user",
+      "itemIds": [
+        "itm_exp_a",
+        "itm_exp_b"
+      ]
+    },
+    {
+      "id": "sec_award",
+      "kind": "award",
+      "title": "获奖情况",
+      "icon": "trophy",
+      "itemIds": [
+        "itm_awd_a"
+      ]
+    }
+  ],
+  "items": {
+    "itm_edu_ms": {
+      "id": "itm_edu_ms",
+      "kind": "education",
+      "school": "示例大学",
+      "degree": "硕士",
+      "start": "2021",
+      "end": "2025",
+      "major": "示例专业",
+      "gpa": "3.8/4.0"
+    },
+    "itm_edu_bs": {
+      "id": "itm_edu_bs",
+      "kind": "education",
+      "school": "示例大学",
+      "degree": "本科",
+      "start": "2017",
+      "end": "2021",
+      "major": "示例专业",
+      "gpa": "3.6/4.0"
+    },
+    "itm_pub_a": {
+      "id": "itm_pub_a",
+      "kind": "publication",
+      "title": "Alpha: Example Paper",
+      "venue": "Example Conference, EC 2025",
+      "venueShort": "EC 2025",
+      "authors": [
+        "Sample Person",
+        "Co Author"
+      ],
+      "links": [
+        "https://example.com/paper/alpha",
+        "https://example.com/code/alpha"
+      ],
+      "bullets": []
+    },
+    "itm_pub_b": {
+      "id": "itm_pub_b",
+      "kind": "publication",
+      "title": "Beta: Example Paper",
+      "venue": "Example Conference, EC 2024",
+      "venueShort": "EC 2024",
+      "authors": [
+        "Sample Person",
+        "Co Author"
+      ],
+      "links": [
+        "https://example.com/paper/beta"
+      ],
+      "bullets": []
+    },
+    "itm_pub_c": {
+      "id": "itm_pub_c",
+      "kind": "publication",
+      "title": "Gamma: Example Paper",
+      "venue": "arXiv preprint, 2023",
+      "venueShort": "arXiv 2023",
+      "authors": [
+        "Sample Person"
+      ],
+      "links": [],
+      "bullets": []
+    },
+    "itm_pub_d": {
+      "id": "itm_pub_d",
+      "kind": "publication",
+      "title": "Delta: Example Paper",
+      "venue": "Example Symposium, ES 2025",
+      "venueShort": "ES 2025",
+      "authors": [
+        "Sample Person",
+        "Co Author"
+      ],
+      "links": [],
+      "bullets": []
+    },
+    "itm_pub_e": {
+      "id": "itm_pub_e",
+      "kind": "publication",
+      "title": "Epsilon: Example Paper",
+      "venue": "Example Symposium, ES 2024",
+      "venueShort": "ES 2024",
+      "authors": [
+        "Sample Person"
+      ],
+      "links": [],
+      "bullets": []
+    },
+    "itm_pub_f": {
+      "id": "itm_pub_f",
+      "kind": "publication",
+      "title": "Zeta: Example Paper",
+      "venue": "arXiv preprint, 2023",
+      "venueShort": "arXiv 2023",
+      "authors": [
+        "Sample Person"
+      ],
+      "links": [],
+      "bullets": []
+    },
+    "itm_pub_g": {
+      "id": "itm_pub_g",
+      "kind": "publication",
+      "title": "Eta: Example Paper",
+      "venue": "arXiv preprint, 2023",
+      "venueShort": "arXiv 2023",
+      "authors": [
+        "Sample Person"
+      ],
+      "links": [],
+      "bullets": []
+    },
+    "itm_pub_noauth": {
+      "id": "itm_pub_noauth",
+      "kind": "publication",
+      "title": "Theta: Example Paper",
+      "venue": "arXiv preprint, 2023",
+      "venueShort": "arXiv 2023",
+      "authors": [],
+      "links": [],
+      "bullets": []
+    },
+    "itm_prj_a": {
+      "id": "itm_prj_a",
+      "kind": "project",
+      "name": "示例项目 1",
+      "role": "示例角色",
+      "start": "2023.05",
+      "end": "2024.04",
+      "summary": "示例项目摘要，**加粗** 与 ==强调== 混排。",
+      "bullets": [
+        {
+          "id": "pb_a1",
+          "text": "示例要点1，含 **加粗** 与 `代码`"
+        },
+        {
+          "id": "pb_a2",
+          "text": "示例要点2，==主色强调=="
+        },
+        {
+          "id": "pb_a3",
+          "text": "示例要点3"
+        }
+      ]
+    },
+    "itm_prj_b": {
+      "id": "itm_prj_b",
+      "kind": "project",
+      "name": "示例项目 2",
+      "role": "示例角色",
+      "start": "2022.09",
+      "end": "2023.06",
+      "summary": "示例项目摘要。",
+      "bullets": [
+        {
+          "id": "pb_b1",
+          "text": "示例要点1，**加粗**"
+        },
+        {
+          "id": "pb_b2",
+          "text": "示例要点2，==主色强调=="
+        },
+        {
+          "id": "pb_b3",
+          "text": "示例要点3"
+        }
+      ]
+    },
+    "itm_prj_c": {
+      "id": "itm_prj_c",
+      "kind": "project",
+      "name": "示例项目 3",
+      "role": "示例角色",
+      "start": "2021.09",
+      "end": "2022.08",
+      "summary": "示例项目摘要。",
+      "bullets": [
+        {
+          "id": "pb_c1",
+          "text": "示例要点1，含 `等宽`"
+        },
+        {
+          "id": "pb_c2",
+          "text": "示例要点2"
+        }
+      ]
+    },
+    "itm_exp_a": {
+      "id": "itm_exp_a",
+      "kind": "experience",
+      "company": "示例公司",
+      "start": "2020.06",
+      "end": "2021.06",
+      "department": "示例部门",
+      "team": "示例团队",
+      "role": "示例角色",
+      "summary": "示例摘要。",
+      "bullets": [
+        {
+          "id": "eb_a1",
+          "text": "示例要点1，含 ==强调=="
+        }
+      ]
+    },
+    "itm_exp_b": {
+      "id": "itm_exp_b",
+      "kind": "experience",
+      "company": "示例公司",
+      "start": "2019.06",
+      "end": "2019.09",
+      "summary": "",
+      "bullets": []
+    },
+    "itm_awd_a": {
+      "id": "itm_awd_a",
+      "kind": "award",
+      "name": "示例奖项",
+      "date": "2024",
+      "level": "示例等级",
+      "issuer": "示例机构"
+    }
+  }
+}

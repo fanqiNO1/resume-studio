@@ -1,0 +1,189 @@
+/* 应用外壳样式。与简历正文样式（resume.css）严格分离：
+   正文样式必须只受模板变量影响，不能被外壳的全局规则污染。 */
+
+:root {
+  /*
+   * 淡蓝配色，由 #66CCFF 派生。
+   * #66CCFF 本身太亮，做文字/边框对比度不够（在白底上只有 1.8:1），
+   * 所以只用它做选中态的浅色背景，交互色用压暗到可读对比度的版本。
+   */
+  --ui-tint: #66ccff;
+
+  --ui-bg: #e6f2fa; /* 工作区底色 */
+  --ui-panel: #f6fbfe; /* 面板：极浅的蓝白，不用纯白 */
+  --ui-panel-raised: #ffffff; /* 需要浮起来的卡片 */
+  --ui-border: #d2e8f4;
+  --ui-border-strong: #a7d3ea;
+
+  --ui-text: #0d2b3c;
+  --ui-muted: #4a6f85; /* 对 --ui-panel 约 5.2:1，小字也够 */
+  --ui-accent: #0b7bb5; /* #66CCFF 压暗，对 --ui-panel 约 4.7:1 */
+  --ui-accent-hover: #08628f;
+  --ui-accent-soft: #d6eefb; /* 选中态底色 */
+
+  --ui-danger: #b91c1c;
+  --ui-warn: #a35a07;
+
+  /*
+   * 界面字体栈。**不要放 'Resume Serif'** —— 那是简历用的 Termes + 宋体，
+   * 拿来渲染界面会变成一屏 Times 风格的衬线，英文观感很差（这曾经是个 bug）。
+   * 'Resume UI' 是自托管的 Inter 拉丁子集；中文走系统 sans。
+   */
+  --ui-font: 'Resume UI', 'Inter', system-ui, -apple-system, 'Segoe UI', 'Noto Sans CJK SC',
+    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --ui-font-mono: ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--ui-font);
+  font-size: 13px;
+  color: var(--ui-text);
+  background: var(--ui-bg);
+  -webkit-font-smoothing: antialiased;
+  /* Inter 的等宽数字：表格与页数统计不会因数字宽度不同而跳动 */
+  font-variant-numeric: tabular-nums;
+}
+
+#app {
+  height: 100%;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ---------- 通用控件 ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: 5px;
+  background: var(--ui-panel-raised);
+  color: var(--ui-text);
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--ui-accent-soft);
+  border-color: var(--ui-accent);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--ui-accent-hover);
+  border-color: var(--ui-accent-hover);
+}
+.btn-danger {
+  background: var(--ui-danger);
+  border-color: var(--ui-danger);
+  color: #fff;
+}
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+  padding: 3px 6px;
+  color: var(--ui-muted);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  border-color: transparent;
+}
+.btn-sm {
+  padding: 3px 7px;
+  font-size: 12px;
+}
+
+.field-input,
+.field-textarea,
+.field-select {
+  width: 100%;
+  padding: 5px 7px;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: 5px;
+  background: var(--ui-panel-raised);
+  line-height: 1.45;
+}
+.field-input:focus,
+.field-textarea:focus,
+.field-select:focus {
+  outline: 2px solid rgba(102, 204, 255, 0.55);
+  outline-offset: -1px;
+  border-color: var(--ui-accent);
+}
+.field-textarea {
+  resize: vertical;
+  min-height: 30px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.6;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  white-space: nowrap;
+}
+.tag-warn {
+  background: #fdf0d8;
+  color: var(--ui-warn);
+}
+.tag-danger {
+  background: #fde2e2;
+  color: var(--ui-danger);
+}
+.tag-muted {
+  background: #e4eef5;
+  color: var(--ui-muted);
+}
+
+/* 滚动条：细一点，避免抢视觉 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--ui-border-strong);
+  border-radius: 5px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

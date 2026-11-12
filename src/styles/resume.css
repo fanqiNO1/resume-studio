@@ -1,0 +1,271 @@
+/**
+ * 简历正文样式。
+ *
+ * 硬约束：
+ *  - 所有尺寸用 pt。em 层层相乘会累积舍入误差，在十几个块上足以改变断页位置。
+ *  - 不要在 block 根元素外再加包装层，也不要给 block 加 padding —— 测量的是
+ *    block 根元素的 getBoundingClientRect().height，包装层会引入 margin 折叠差异。
+ *  - 这份 CSS 同时服务屏幕预览与 PDF 导出。任何只对打印生效的规则都是
+ *    预览/PDF 不一致的来源，禁止添加（见 AGENTS.md §4）。
+ *
+ * 排版数值不写死在这里，来自模板 JSON → CSS 自定义属性（见 tokens.ts）。
+ */
+
+.resume-root {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-size-body);
+  line-height: var(--rs-line);
+  color: var(--rs-fg);
+  text-align: var(--rs-align);
+  /* 简历不断词：中文不需要，英文断词在窄栏里反而难读 */
+  hyphens: manual;
+  /* CJK 标点挤压。Chromium 123+ 支持；不支持的浏览器忽略此声明 */
+  text-spacing-trim: var(--rs-punct-trim);
+  /* 字距微调与连字：拉丁部分受益，CJK 不受影响 */
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  /* 禁止浏览器自动调整字号，否则测量与打印会不一致 */
+  text-size-adjust: none;
+}
+
+/* 中英之间的自动间距。用 margin 而非空格字符：复制文本时不会多出空格 */
+.resume-root .as {
+  display: inline;
+  margin-inline: 0.09em;
+}
+.resume-root[data-auto-space='off'] .as {
+  margin-inline: 0;
+}
+
+/* ---------- 页首 ---------- */
+
+/* inline：姓名左、联系方式右，同一行（单页向，省约 20pt） */
+.rs-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12pt;
+}
+
+/*
+ * stacked：姓名居中一行，联系方式居中另起一行 —— resume.cls 的 \name + \basicInfo。
+ * 两者都用 centerline，所以是整行居中而非左对齐。
+ */
+.resume-root[data-header='stacked'] .rs-header {
+  display: block;
+  text-align: center;
+}
+.resume-root[data-header='stacked'] .rs-contacts {
+  margin-top: var(--rs-name-gap);
+  justify-content: center;
+}
+
+.rs-name {
+  font-size: var(--rs-size-name);
+  font-weight: 700;
+  /* 1.0 而非默认行高：姓名是单行，多余的 leading 会推开下方所有内容 */
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.rs-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  /* 间距由 \dotSep 的空格自己表达，这里不额外加 gap */
+  gap: 0;
+  font-size: var(--rs-size-contact);
+  color: var(--rs-fg);
+  line-height: 1;
+}
+.rs-contact {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+/*
+ * \dotSep = `\ \ \textbf{\textperiodcentered}\ \ `
+ * 即：两个词间空格 + 加粗中点 + 两个词间空格。词间空格在 12pt Termes 下约 2.99pt。
+ */
+.rs-sep {
+  font-weight: 700;
+  padding: 0 var(--rs-dotsep-pad);
+}
+
+/*
+ * \icon = \makebox[1em][c]{icon} + \hspace{0.3em}，之后 \basicInfoItem 还有一个 `\ `。
+ * 所以图标占 1em 宽（居中），右侧留 0.3em + 一个词间空格。
+ *
+ * 颜色用 .rs-contacts .rs-icon 提高特异性：\basicInfoItem 没有给图标设色，
+ * 联系方式的图标继承正文黑色，而小节标题的图标才是主色。
+ */
+.rs-contacts .rs-icon {
+  width: 1em;
+  height: 0.78em;
+  flex: 0 0 auto;
+  margin-right: calc(0.3em + var(--rs-word-space));
+  color: var(--rs-fg);
+  /* 图标按 makebox 居中，不参与基线对齐 */
+  align-self: center;
+}
+
+/* ---------- 小节标题 ---------- */
+
+.rs-section {
+  font-size: var(--rs-size-section);
+  font-weight: 700;
+  color: var(--rs-accent);
+  line-height: 1;
+  /* 标题不参与两端对齐，否则单行标题会被拉开 */
+  text-align: left;
+}
+.rs-section-inner {
+  display: flex;
+  align-items: center;
+}
+
+/* \sectionTitle 里图标与标题之间是 \icon 的 0.3em 加一个词间空格 */
+.rs-section .rs-icon {
+  width: 1em;
+  height: 0.82em;
+  flex: 0 0 auto;
+  margin-right: calc(0.3em + var(--rs-word-space));
+  color: var(--rs-accent);
+}
+
+/* 左侧色条：省掉横线占用的垂直空间（单页向） */
+.resume-root[data-section-style='leftbar'] .rs-section-inner {
+  padding-left: 5pt;
+  border-left: 2.6pt solid var(--rs-accent);
+}
+
+/*
+ * 横线式：对应 resume.cls 的 [\titleline{\color{fgcolor}\titlerule}]。
+ * \titlerule 默认 0.4pt，横跨整个内容宽度。
+ * 用 padding + border 而不是独立元素：横线必须属于同一个 block，
+ * 否则分页器会把标题与横线拆到两页。
+ */
+.resume-root[data-section-style='rule'] .rs-section {
+  border-bottom: 0.4pt solid var(--rs-rule);
+  padding-bottom: var(--rs-rule-gap);
+}
+
+/* ---------- 条目标题行：左标题 …… 右日期 ---------- */
+
+.rs-entry-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8pt;
+  font-size: var(--rs-size-entry);
+  /* 1.0：条目标题是单行，行高由上下 margin 控制，避免双重 leading */
+  line-height: 1;
+  text-align: left;
+}
+.rs-entry-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rs-entry-right {
+  flex: 0 0 auto;
+  color: var(--rs-fg);
+  font-size: var(--rs-size-date);
+  white-space: nowrap;
+}
+
+/* ---------- 段落 ---------- */
+
+.rs-para {
+  line-height: var(--rs-line);
+}
+
+/* ---------- 要点 ---------- */
+
+/*
+ * 对应 \begin{itemize}：leftmargin=1.25pc(15pt)，noitemsep，topsep=0.25em。
+ * 符号用真实的 • 字符（与 resume.cls 一致，Termes 的 bullet），
+ * 而不是 CSS 画的圆点 —— 那样大小与位置对不上参考。
+ */
+.rs-bullet {
+  line-height: var(--rs-line);
+  padding-left: var(--rs-list-indent);
+  position: relative;
+}
+.rs-bullet-mark::before {
+  content: '•';
+  position: absolute;
+  left: var(--rs-list-marker-left);
+  /* 不用 top：让符号跟随首行基线，与 LaTeX 的 \item 一致 */
+}
+.rs-bullet-body {
+  display: block;
+}
+
+/* ---------- 论文 ---------- */
+
+/*
+ * standard 档对应 resume.cls 的
+ *   \subsection{\textbf{title}} / \textit{venue} / authors
+ * 三者是三个独立 block（见 blocks.ts 里的说明），行距与间距由块间 margin 控制。
+ */
+.rs-pub-title {
+  font-size: var(--rs-size-entry);
+  /* 1.0：标题是单行，行高由上下 margin 控制，避免双重 leading */
+  line-height: 1;
+  text-align: left;
+}
+.rs-venue,
+.rs-authors {
+  font-size: var(--rs-size-small);
+  color: var(--rs-fg);
+  line-height: var(--rs-line);
+  text-align: left;
+}
+.rs-venue em,
+.rs-entry-right em {
+  font-style: italic;
+}
+
+/* ---------- 行内标记 ---------- */
+
+.rs-hl {
+  color: var(--rs-accent);
+  font-weight: 700;
+}
+.rs-code {
+  font-family: var(--rs-font-mono);
+  /* 等宽字体的视觉字号偏大，缩一点才与正文匹配 */
+  font-size: 0.94em;
+  /* 不加背景色：打印出来是灰块，且占用行高 */
+}
+.rs-link {
+  color: inherit;
+  text-decoration: none;
+}
+/*
+ * 论文的链接图标。尺寸压到 0.72em 并微微下沉，让它在视觉上"挂"在
+ * 会议名旁边而不是抢戏 —— 它只是个可点提示，不是内容。
+ */
+.rs-link-icon {
+  width: 0.72em;
+  height: 0.72em;
+  margin-left: 0.28em;
+  vertical-align: -0.03em;
+  color: var(--rs-accent);
+}
+.rs-icon {
+  width: 1em;
+  height: 0.86em;
+  flex: 0 0 auto;
+  color: var(--rs-accent);
+}
+
+/* ---------- 编辑器联动高亮（仅屏幕，导出时不挂这个 class） ---------- */
+
+.rs-active {
+  background: #fff6cc;
+  box-shadow: 0 0 0 2pt #fff6cc;
+  border-radius: 1pt;
+  transition: background 0.9s ease-out, box-shadow 0.9s ease-out;
+}

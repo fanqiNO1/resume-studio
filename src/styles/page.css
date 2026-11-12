@@ -1,0 +1,112 @@
+/**
+ * 页面盒子样式：屏幕预览与 PDF 打印共用。
+ *
+ * 关键：`.page` 的尺寸与 padding 就是 A4 与页边距本身。分页由 JS 预计算并
+ * 产出显式的 .page 元素，打印时 Chromium 不做自主断页 —— 这是 PDF 断页位置
+ * 等于预览的根本原因。见 .dev/DESIGN.md §2.4。
+ */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.page {
+  box-sizing: border-box;
+  width: 210mm;
+  /*
+   * 296.9mm 而不是 297mm：Chromium 打印时亚像素舍入偶发把内容溢出 0.x px，
+   * 导致每页后面多出一张空白页。留 0.1mm 余量。
+   */
+  height: 296.9mm;
+  padding: var(--rs-margin-top) var(--rs-margin-right) var(--rs-margin-bottom) var(--rs-margin-left);
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+}
+
+.page + .page {
+  break-before: page;
+}
+
+/* ---------- 屏幕预览的装饰。导出时 body 带 data-export，全部关闭 ---------- */
+
+.preview-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.page-wrap {
+  position: relative;
+  /* transform 缩放不改变 font-size，因此不影响换行与测量 */
+  transform-origin: top center;
+}
+
+body:not([data-export]) .page {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.16), 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+/* 页码标签（屏幕上的辅助信息，不进 PDF） */
+.page-label {
+  position: absolute;
+  top: 0;
+  left: -52px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 内容区边界参考线，帮助判断是否贴边 */
+body:not([data-export]) .page[data-guides='true']::after {
+  content: '';
+  position: absolute;
+  inset: var(--rs-margin-top) var(--rs-margin-right) var(--rs-margin-bottom) var(--rs-margin-left);
+  outline: 1px dashed rgba(59, 130, 246, 0.32);
+  pointer-events: none;
+}
+
+/* ---------- 导出模式 ---------- */
+
+body[data-export] {
+  margin: 0;
+  background: #fff;
+}
+body[data-export] .preview-stage {
+  display: block;
+  padding: 0;
+  gap: 0;
+}
+body[data-export] .page-wrap {
+  transform: none !important;
+}
+body[data-export] .page-label {
+  display: none;
+}
+
+@media print {
+  body {
+    margin: 0;
+    background: #fff;
+  }
+  .preview-stage {
+    display: block;
+    padding: 0;
+    gap: 0;
+  }
+  .page-wrap {
+    transform: none !important;
+  }
+  .page-label,
+  .rs-active {
+    display: revert;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .page-label {
+    display: none;
+  }
+}

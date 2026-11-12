@@ -1,0 +1,71 @@
+{
+  "id": "academic-serif",
+  "name": "学术·复刻 resume.cls",
+  "page": {
+    "size": "A4",
+    "margin": {
+      "top": 21.59,
+      "right": 20.32,
+      "bottom": 13.97,
+      "left": 20.32,
+      "unit": "mm"
+    }
+  },
+  "font": {
+    "body": [
+      "Resume Serif"
+    ],
+    "mono": [
+      "Resume Serif"
+    ],
+    "baseSize": 10.95,
+    "baseLineHeight": 13.6
+  },
+  "scale": {
+    "name": 24.88,
+    "contact": 12,
+    "sectionTitle": 14.4,
+    "entryTitle": 12,
+    "dateRight": 12,
+    "body": 10.95,
+    "small": 10.95
+  },
+  "color": {
+    "accent": "#01408f",
+    "fg": "#000000",
+    "muted": "#000000",
+    "rule": "#01408f"
+  },
+  "sectionTitleStyle": "rule",
+  "headerStyle": "stacked",
+  "entry": {
+    "educationLayout": "twoLine",
+    "accentSchool": true,
+    "selfAuthorBold": false
+  },
+  "spacing": {
+    "headerBelow": 20.5,
+    "sectionAbove": 12.0,
+    "sectionBelow": 9.05,
+    "entryAbove": 9.1,
+    "entryBelow": 0,
+    "listTop": 5.85,
+    "listItemGap": 0,
+    "listIndent": 15,
+    "listMarkerLeft": 5.67,
+    "paragraphGap": 4.0,
+    "ruleBelowTitle": 2.05,
+    "nameBelow": 7.85
+  },
+  "publicationRender": "standard",
+  "text": {
+    "align": "justify",
+    "autoSpaceCJKLatin": true,
+    "punctuationTrim": true
+  },
+  "breaking": {
+    "keepSectionTitleWithNext": true,
+    "keepEntryHeaderWithNext": true
+  },
+  "_note": "版式参考开源项目 https://github.com/luooofan/resume 的 resume.cls（MIT 许可）：页首姓名居中 + 联系方式居中带 · 分隔、小节标题带图标与横线、论文三行式、作者名仅下划线、教育条目两行式。"
+}

@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "研究岗",
+    "order": 2,
+    "targetPosition": "示例岗位",
+    "note": "演示取舍：论文提前、展开档、要点勾选、字段覆盖、隐藏条目。",
+    "public": false,
+    "filenameTemplate": "{name}-{positionName}",
+    "updatedAt": ""
+  },
+  "template": "academic-serif",
+  "density": "compact",
+  "fitScale": 1,
+  "templateOverrides": {},
+  "layout": {
+    "showPhoto": false,
+    "pageNumber": false,
+    "targetPages": 1
+  },
+  "contactInclude": [
+    "c_phone",
+    "c_mail",
+    "c_gh"
+  ],
+  "sections": [
+    {
+      "ref": "sec_pub",
+      "visible": true,
+      "titleOverride": "研究成果",
+      "items": [
+        {
+          "ref": "itm_pub_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "示例一句话展开。",
+          "extraBullets": [
+            {
+              "id": "xb_r1",
+              "text": "示例要点1"
+            }
+          ],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "expanded"
+        },
+        {
+          "ref": "itm_pub_b",
+          "visible": false,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "本岗位不展示",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_c",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "tight"
+        },
+        {
+          "ref": "itm_pub_noauth",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "",
+          "render": "standard"
+        }
+      ]
+    },
+    {
+      "ref": "sec_edu",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_edu_ms",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_edu_bs",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_exp",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_exp_a",
+          "visible": true,
+          "detail": "summary",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        },
+        {
+          "ref": "itm_exp_b",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_prj",
+      "visible": true,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_prj_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": [
+            "pb_a1",
+            "pb_a2"
+          ],
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {
+            "summary": "示例摘要。"
+          },
+          "spacingAfter": -3,
+          "note": ""
+        },
+        {
+          "ref": "itm_prj_b",
+          "visible": false,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": "本岗位不展示"
+        },
+        {
+          "ref": "itm_prj_c",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    },
+    {
+      "ref": "sec_award",
+      "visible": false,
+      "titleOverride": "",
+      "items": [
+        {
+          "ref": "itm_awd_a",
+          "visible": true,
+          "detail": "full",
+          "bulletInclude": null,
+          "pitch": "",
+          "extraBullets": [],
+          "overrides": {},
+          "spacingAfter": 0,
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "pendingItems": []
+}
