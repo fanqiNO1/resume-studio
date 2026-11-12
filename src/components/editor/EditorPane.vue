@@ -4,7 +4,13 @@
  */
 import { computed, nextTick, ref } from 'vue'
 import { useResumeStore } from '@/stores/resume'
-import { KIND_LABEL, PositionItem, type PositionSection } from '@/schema'
+import {
+  CONTACT_TYPE_LABEL,
+  KIND_LABEL,
+  PositionItem,
+  type ContactType,
+  type PositionSection,
+} from '@/schema'
 import ItemCard from './ItemCard.vue'
 import FieldInput from './FieldInput.vue'
 
@@ -65,6 +71,26 @@ function toggleContact(id: string): void {
     pos.contactInclude = order.filter((c) => pos.contactInclude.includes(c) || c === id)
   }
   store.touchPosition()
+}
+
+/** 新增一条联系方式，默认在当前岗位勾上 */
+const newContactType = ref<ContactType>('homepage')
+
+function addContact(): void {
+  store.addContact(newContactType.value)
+}
+
+/** 删除是内容池级操作，要先确认 */
+const removingContact = ref('')
+
+function askRemoveContact(id: string): void {
+  removingContact.value = id
+}
+
+function confirmRemoveContact(): void {
+  if (!removingContact.value) return
+  store.removeContact(removingContact.value)
+  removingContact.value = ''
 }
 
 /** 公开版却勾了敏感联系方式 —— 这是最容易出事的地方，必须显式告警 */
@@ -248,6 +274,18 @@ function confirmDeleteItem(): void {
         "
       />
       <FieldInput
+        label="英文名（用于论文成果下划线作者名）"
+        :model-value="profile.basics.nameEn"
+        placeholder="如 Qi Fan"
+        @update:model-value="
+          profile.basics.nameEn = $event;
+          store.touchProfile()
+        "
+      />
+      <p class="field-hint">
+        英文名只用于在论文作者列表里把自己的名字加下划线，<strong>不会显示在简历上</strong>。
+      </p>
+      <FieldInput
         label="目标岗位全称（仅用于备注与文件名）"
         :model-value="position.meta.targetPosition"
         @update:model-value="
@@ -270,23 +308,65 @@ function confirmDeleteItem(): void {
           <span>联系方式</span>
           <span class="pool-hint">勾选决定本岗位展示哪些</span>
         </div>
-        <label v-for="c in profile.basics.contacts" :key="c.id" class="contact-row">
+        <div v-for="c in profile.basics.contacts" :key="c.id" class="contact-row">
           <input
             type="checkbox"
             :checked="position.contactInclude.includes(c.id)"
             @change="toggleContact(c.id)"
           />
-          <span class="contact-type">{{ c.type }}</span>
+          <select
+            class="contact-type"
+            :value="c.type"
+            @change="
+              c.type = ($event.target as HTMLSelectElement).value as ContactType;
+              store.touchProfile()
+            "
+          >
+            <option v-for="(label, type) in CONTACT_TYPE_LABEL" :key="type" :value="type">
+              {{ label }}
+            </option>
+          </select>
           <input
             class="field-input"
             :value="c.value"
+            placeholder="展示的内容"
             @input="
               c.value = ($event.target as HTMLInputElement).value;
               store.touchProfile()
             "
           />
-          <span v-if="c.sensitive" class="tag tag-warn">敏感</span>
-        </label>
+          <input
+            class="field-input contact-url"
+            :value="c.url ?? ''"
+            placeholder="链接（可空）"
+            @input="
+              c.url = ($event.target as HTMLInputElement).value;
+              store.touchProfile()
+            "
+          />
+          <label class="contact-sensitive" title="可公开版里会告警">
+            <input
+              type="checkbox"
+              :checked="c.sensitive"
+              @change="
+                c.sensitive = ($event.target as HTMLInputElement).checked;
+                store.touchProfile()
+              "
+            />
+            敏感
+          </label>
+          <button class="btn btn-ghost btn-sm" title="删除这条联系方式" @click="askRemoveContact(c.id)">
+            ✕
+          </button>
+        </div>
+        <div class="contact-add">
+          <select v-model="newContactType" class="contact-type">
+            <option v-for="(label, type) in CONTACT_TYPE_LABEL" :key="type" :value="type">
+              {{ label }}
+            </option>
+          </select>
+          <button class="add-btn" @click="addContact()">＋ 新增联系方式</button>
+        </div>
       </div>
 
       <FieldInput
@@ -362,6 +442,23 @@ function confirmDeleteItem(): void {
         ＋ 启用「{{ sec.title }}」<template v-if="sec.itemIds.length">（{{ sec.itemIds.length }} 条）</template>
       </button>
     </section>
+  </div>
+
+  <!-- 删除联系方式：内容池是唯一数据源，所以要先确认 -->
+  <div v-if="removingContact" class="modal-backdrop" @click.self="removingContact = ''">
+    <div class="modal">
+      <h3>删除这条联系方式？</h3>
+      <p class="modal-note">
+        它会从内容池里移除，所有岗位都不再展示它。
+        <template v-if="profile">
+          当前值：{{ profile.basics.contacts.find((c) => c.id === removingContact)?.value || '（空）' }}
+        </template>
+      </p>
+      <div class="modal-actions">
+        <button class="btn" @click="removingContact = ''">取消</button>
+        <button class="btn btn-danger" @click="confirmRemoveContact">删除</button>
+      </div>
+    </div>
   </div>
 
   <!-- 删除条目：内容池是唯一数据源，所以要说清影响范围 -->
@@ -533,10 +630,40 @@ function confirmDeleteItem(): void {
   margin-bottom: 4px;
 }
 .contact-type {
-  flex: 0 0 62px;
-  font-size: 11px;
+  flex: 0 0 84px;
+  font-size: 11.5px;
   color: var(--ui-muted);
   font-family: var(--ui-font-mono);
+  background: var(--ui-panel-raised);
+  border: 1px solid var(--ui-border);
+  border-radius: 5px;
+  padding: 3px 4px;
+}
+.contact-url {
+  flex: 0 0 150px;
+  min-width: 0;
+}
+.contact-sensitive {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--ui-muted);
+  white-space: nowrap;
+}
+.contact-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.contact-add .add-btn {
+  margin-top: 0;
+}
+.field-hint {
+  margin: 2px 0 8px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ui-muted);
 }
 
 /* 新增条目按钮：虚线框，与实心的条目卡片区分开 */

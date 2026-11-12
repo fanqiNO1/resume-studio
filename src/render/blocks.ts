@@ -109,13 +109,21 @@ export type Block =
  * 模板可通过 entry.selfAuthorBold 改成下划线 + 加粗。
  *
  * 用行内标记而不是预先生成 DOM：保持 Block 是纯数据，便于序列化与测试。
+ *
+ * 匹配用「归一化后相等」而不是原样比较：作者列表里写的是 "Qi Fan"，
+ * 而用户填的可能是 "Qi  Fan"、"Q.Fan" 或大小写不同 —— 这些都该认成同一个人。
+ * 但只比归一化后的**整体**，不做子串匹配：作者 "Qi Fanqi" 不该被 "Qi Fan" 命中。
  */
-function formatAuthors(authors: string[], aliases: string[], bold: boolean): string {
+function formatAuthors(authors: string[], selfNames: string[], bold: boolean): string {
   if (authors.length === 0) return ''
-  const norm = (s: string) => s.trim().toLowerCase()
-  const aliasSet = new Set(aliases.map(norm))
+  const norm = (s: string) =>
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/[\s.·\-_'’]/g, '')
+  const selfSet = new Set(selfNames.filter(Boolean).map(norm))
   const mark = (a: string) => (bold ? `**_${a}_**` : `_${a}_`)
-  return authors.map((a) => (aliasSet.has(norm(a)) ? mark(a) : a)).join(', ')
+  return authors.map((a) => (selfSet.has(norm(a)) ? mark(a) : a)).join(', ')
 }
 
 /**
@@ -142,10 +150,14 @@ function formatRange(start: string, end: string): string {
 
 export interface BuildBlocksInput {
   resume: ResolvedResume
-  aliases: string[]
+  /**
+   * 「自己」的名字候选集合：中文名、英文名、别名。
+   * 作者列表里命中任何一个就加下划线。
+   */
+  selfNames: string[]
 }
 
-export function buildBlocks({ resume, aliases }: BuildBlocksInput): Block[] {
+export function buildBlocks({ resume, selfNames }: BuildBlocksInput): Block[] {
   const blocks: Block[] = []
   const { spacing } = resume.metrics
 
@@ -175,7 +187,7 @@ export function buildBlocks({ resume, aliases }: BuildBlocksInput): Block[] {
     })
 
     section.items.forEach((ri, idx) => {
-      const produced = buildItemBlocks(ri, section.id, resume, aliases, idx === 0)
+      const produced = buildItemBlocks(ri, section.id, resume, selfNames, idx === 0)
       blocks.push(...produced)
     })
   }
@@ -187,7 +199,7 @@ function buildItemBlocks(
   ri: ResolvedItem,
   sectionId: string,
   resume: ResolvedResume,
-  aliases: string[],
+  selfNames: string[],
   isFirstInSection: boolean,
 ): Block[] {
   const { spacing } = resume.metrics
@@ -337,7 +349,7 @@ function buildItemBlocks(
     }
 
     case 'publication': {
-      const authors = formatAuthors(item.authors, aliases, resume.template.entry.selfAuthorBold)
+      const authors = formatAuthors(item.authors, selfNames, resume.template.entry.selfAuthorBold)
       const linkText = formatLinks(item.links)
 
       if (ri.render === 'tight') {

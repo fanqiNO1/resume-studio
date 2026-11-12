@@ -49,8 +49,11 @@ function resolve(position: Position, tpl: Template = template) {
   return resolveResume({ profile, position, template: tpl })
 }
 
+/** 「自己」的名字候选：中文名 + 英文名 + 别名 */
+const selfNames = [profile.basics.name, profile.basics.nameEn, ...profile.basics.aliases].filter(Boolean)
+
 function blocksOf(position: Position, tpl: Template = template) {
-  return buildBlocks({ resume: resolve(position, tpl), aliases: profile.basics.aliases })
+  return buildBlocks({ resume: resolve(position, tpl), selfNames })
 }
 
 describe('resolve：shared 与 position-local 分层', () => {
@@ -117,9 +120,40 @@ describe('resolve：shared 与 position-local 分层', () => {
 
   it('只渲染被 contactInclude 选中的联系方式', () => {
     expect(resolve(posPublic).contacts.map((c) => c.id)).toEqual(['c_gh'])
-    expect(resolve(posB).contacts.map((c) => c.id)).toEqual(['c_phone', 'c_mail', 'c_gh'])
+    expect(resolve(posB).contacts.map((c) => c.id)).toEqual(['c_phone', 'c_mail', 'c_gh', 'c_home'])
     // 可公开版不该带出敏感项
     expect(resolve(posPublic).contacts.some((c) => c.sensitive)).toBe(false)
+  })
+})
+
+describe('blocks：作者名标记', () => {
+  /** 取某个岗位里某篇论文的作者行文本 */
+  const authorsText = (position: Position, names: string[], id = 'itm_pub_a:authors'): string => {
+    const blocks = buildBlocks({ resume: resolve(position, template), selfNames: names })
+    const b = blocks.find((x) => x.id === id)!
+    return 'text' in b ? b.text : ''
+  }
+
+  it('英文名（nameEn）能命中作者名', () => {
+    // 论文作者列表里写的是英文名，而抬头写的是中文名 —— 只靠 name 匹配不上
+    const text = authorsText(posA, ['示例人', 'Sample Person'])
+    expect(text).toContain('_Sample Person_')
+  })
+
+  it('归一化后相等就算命中（空格、大小写、点号差异）', () => {
+    const text = authorsText(posA, ['sample  person'])
+    expect(text).toContain('_Sample Person_')
+  })
+
+  it('不做子串匹配：作者名更长时不该被误标', () => {
+    const text = authorsText(posA, ['Sample'])
+    expect(text).not.toContain('_Sample Person_')
+  })
+
+  it('没有命中时原样输出，不留下多余的下划线标记', () => {
+    const text = authorsText(posA, ['完全不存在的名字'])
+    expect(text).not.toContain('_')
+    expect(text).toContain('Sample Person')
   })
 })
 
@@ -190,7 +224,7 @@ describe('blocks：论文', () => {
     const pub = withBad.items.itm_pub_a as Extract<Item, { kind: 'publication' }>
     pub.links = ['', '   ', 'https://c.d']
     const r = resolveResume({ profile: withBad, position: posB, template })
-    const venue = buildBlocks({ resume: r, aliases: [] }).find((b) => b.id === 'itm_pub_a:venue')!
+    const venue = buildBlocks({ resume: r, selfNames: [] }).find((b) => b.id === 'itm_pub_a:venue')!
     const text = 'text' in venue ? venue.text : ''
     expect(text).toContain('https://c.d')
     expect(text).not.toContain('()')
@@ -378,7 +412,7 @@ function shapeCheck(label: string, dataDir: string) {
     for (const { id, position } of positions) {
       const tpl = template
       const resume = resolveResume({ profile, position, template: tpl })
-      const blocks = buildBlocks({ resume, aliases: profile.basics.aliases })
+      const blocks = buildBlocks({ resume, selfNames })
       expect(blocks.length, id).toBeGreaterThan(0)
       const ids = blocks.map((b) => b.id)
       expect(new Set(ids).size, `${id} 的 block id 应唯一`).toBe(ids.length)

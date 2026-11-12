@@ -3,10 +3,12 @@ import {
   Item,
   Profile,
   createEmptyItem,
+  nextContactId,
   nextItemId,
   REQUIRED_FIELDS,
   FIELD_ORDER,
   KIND_LABEL,
+  CONTACT_TYPE_LABEL,
   type ItemKind,
 } from '@/schema'
 
@@ -86,6 +88,48 @@ describe('nextItemId', () => {
   it('生成的 id 可用作 schema 的 Id（非空）', () => {
     const id = nextItemId('project', [])
     expect(() => Item.parse(createEmptyItem('project', id))).not.toThrow()
+  })
+})
+
+describe('nextContactId', () => {
+  it('不与已有 id 冲突', () => {
+    const taken = new Set<string>()
+    for (let i = 0; i < 200; i++) {
+      const id = nextContactId('homepage', taken)
+      expect(taken.has(id)).toBe(false)
+      taken.add(id)
+    }
+  })
+
+  it('前缀带类型，便于阅读 profile.json', () => {
+    expect(nextContactId('homepage', [])).toMatch(/^c_homepage_/)
+    expect(nextContactId('phone', [])).toMatch(/^c_phone_/)
+  })
+})
+
+describe('basics.nameEn', () => {
+  it('默认是空字符串，旧数据不解析也不会炸', () => {
+    const p = Profile.parse({ schemaVersion: 1, basics: { name: '示例人', contacts: [] } })
+    expect(p.basics.nameEn).toBe('')
+  })
+
+  it('不参与简历抬头渲染：抬头的名字仍然只有 basics.name', () => {
+    // 英文名只用于论文作者标记，出现在抬头会变成用户不想要的样子
+    const p = Profile.parse({
+      schemaVersion: 1,
+      basics: { name: '示例人', nameEn: 'Sample Person', contacts: [] },
+    })
+    expect(p.basics.name).toBe('示例人')
+    expect(p.basics.nameEn).toBe('Sample Person')
+  })
+})
+
+describe('CONTACT_TYPE_LABEL', () => {
+  it('每种联系方式类型都有中文名（编辑器下拉框用）', () => {
+    for (const label of Object.values(CONTACT_TYPE_LABEL)) {
+      expect(label).toBeTruthy()
+    }
+    expect(CONTACT_TYPE_LABEL.homepage).toBeTruthy()
   })
 })
 

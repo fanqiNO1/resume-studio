@@ -12,7 +12,9 @@ import {
   Profile,
   Template,
   createEmptyItem,
+  nextContactId,
   nextItemId,
+  type ContactType,
   type Item,
   type Section,
 } from '@/schema'
@@ -76,10 +78,22 @@ export const useResumeStore = defineStore('resume', () => {
     })
   })
 
+  /**
+   * 「自己」的名字候选：中文名 + 英文名 + 别名。
+   *
+   * 论文作者列表里写的是英文名（"Qi Fan"），而抬头写的是中文名，
+   * 所以两个都要参与匹配。
+   */
+  const selfNames = computed(() => {
+    const basics = profile.value?.basics
+    if (!basics) return []
+    return [basics.name, basics.nameEn, ...basics.aliases].map((s) => s.trim()).filter(Boolean)
+  })
+
   const blocks = computed(() => {
     const r = resolved.value
     if (!r || !profile.value) return []
-    return buildBlocks({ resume: r, aliases: profile.value.basics.aliases })
+    return buildBlocks({ resume: r, selfNames: selfNames.value })
   })
 
   async function load(): Promise<void> {
@@ -262,6 +276,44 @@ export const useResumeStore = defineStore('resume', () => {
     return api(`/api/positions/${encodeURIComponent(id)}/export`, { method: 'POST' })
   }
 
+  // ---- 联系方式操作 ----
+
+  /**
+   * 往内容池新增一条联系方式，并默认在当前岗位里勾上。
+   *
+   * 联系方式没有「待处理队列」那套机制：它就那么几行，漏了就是简历上少一行
+   * 联系方式，用户自己一眼能看见。所以新增即在当前岗位生效。
+   */
+  function addContact(type: ContactType = 'other'): string {
+    const prof = profile.value
+    if (!prof) return ''
+    const id = nextContactId(type, prof.basics.contacts.map((c) => c.id))
+    prof.basics.contacts.push({ id, type, value: '', sensitive: false })
+    const pos = current.value
+    if (pos && !pos.position.contactInclude.includes(id)) {
+      pos.position.contactInclude.push(id)
+      touchPosition(pos.id)
+    }
+    touchProfile()
+    return id
+  }
+
+  /** 从内容池删掉一条联系方式，并从所有岗位的勾选里一并移除 */
+  function removeContact(id: string): void {
+    const prof = profile.value
+    if (!prof) return
+    prof.basics.contacts = prof.basics.contacts.filter((c) => c.id !== id)
+    for (const state of positions) {
+      const idx = state.position.contactInclude.indexOf(id)
+      if (idx >= 0) {
+        state.position.contactInclude.splice(idx, 1)
+        dirtyPositions.add(state.id)
+      }
+    }
+    touchProfile()
+    scheduleSave()
+  }
+
   // ---- 条目操作 ----
 
   /**
@@ -403,6 +455,8 @@ export const useResumeStore = defineStore('resume', () => {
     exportPdf,
     addItem,
     removeItem,
+    addContact,
+    removeContact,
     itemUsage,
     positionItem,
     poolItem,

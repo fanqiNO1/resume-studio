@@ -32,6 +32,18 @@ export const ContactType = z.enum([
 ])
 export type ContactType = z.infer<typeof ContactType>
 
+/** 联系方式类型的中文名，编辑器下拉框用 */
+export const CONTACT_TYPE_LABEL: Record<ContactType, string> = {
+  phone: '手机号',
+  email: '邮箱',
+  github: 'GitHub',
+  homepage: '个人主页',
+  wechat: '微信',
+  linkedin: 'LinkedIn',
+  location: '城市',
+  other: '其他',
+}
+
 export const Contact = z.object({
   id: Id,
   type: ContactType,
@@ -46,8 +58,14 @@ export type Contact = z.infer<typeof Contact>
 export const Basics = z.object({
   name: z.string().default(''),
   /**
+   * 英文名。**不渲染进简历**，只用于在论文作者列表里把自己的名字标出来
+   * （下划线）。论文作者列表里写的是英文名，而简历抬头写的是中文名，
+   * 光靠 `name` 匹配不上，所以单开一个槽。
+   */
+  nameEn: z.string().default(''),
+  /**
    * 论文作者列表里需要标记出来的名字，中英文写法都可以列。
-   * 编辑器暂时没有入口，需要手改 data/profile.json。
+   * 与 `name` / `nameEn` 一起构成「自己名字」的候选集合。
    */
   aliases: z.array(z.string()).default([]),
   /** 头像路径。版式尚未实现（见 docs/DESIGN.md §12），字段先留着。 */
@@ -263,10 +281,25 @@ export function nextItemId(kind: ItemKind, taken: Iterable<string>): string {
   return prefix + Date.now().toString(36)
 }
 
+/**
+ * 生成一个不与现有联系方式冲突的 id。
+ *
+ * 前缀带类型（`c_homepage_xxx`），让 profile.json 与 git diff 一眼看得出
+ * 这是哪一条联系方式。
+ */
+export function nextContactId(type: ContactType, taken: Iterable<string>): string {
+  const used = new Set(taken)
+  for (let i = 0; i < 100; i++) {
+    const id = `c_${type}_${Math.random().toString(36).slice(2, 6)}`
+    if (!used.has(id)) return id
+  }
+  return `c_${type}_${Date.now().toString(36)}`
+}
+
 export function emptyProfile(name = '我的名字'): Profile {
   return Profile.parse({
     schemaVersion: SCHEMA_VERSION,
-    basics: { name, contacts: [] },
+    basics: { name, nameEn: '', aliases: [], contacts: [] },
     sections: [],
     items: {},
   })

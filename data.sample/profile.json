@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "basics": {
     "name": "示例人",
+    "nameEn": "Sample Person",
     "aliases": [
       "Sample Person",
       "示例人"
@@ -25,6 +26,13 @@
         "type": "github",
         "value": "sample",
         "url": "https://github.com/sample",
+        "sensitive": false
+      },
+      {
+        "id": "c_home",
+        "type": "homepage",
+        "value": "sample.github.io",
+        "url": "https://sample.github.io",
         "sensitive": false
       }
     ]

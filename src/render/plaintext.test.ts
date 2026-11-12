@@ -34,7 +34,7 @@ const template = readTemplate('academic-serif.json')
 const blocksOf = (position: Position, tpl: Template = template) =>
   buildBlocks({
     resume: resolveResume({ profile, position, template: tpl }),
-    aliases: profile.basics.aliases,
+    selfNames: [profile.basics.name, profile.basics.nameEn, ...profile.basics.aliases].filter(Boolean),
   })
 
 const blocks = blocksOf(posA)
@@ -165,7 +165,7 @@ describe('plaintext：逐级复制的切分', () => {
   it('基本信息按联系方式逐条切分，不是一整块', () => {
     // 固件 A 是「可公开」版，手机邮箱被脱敏过滤了，所以这里用 B
     const units = blocksToSections(blocksOf(posB))[0].entries[0].units
-    expect(units.map((u) => u.label)).toEqual(['姓名', '手机', '邮箱', 'GitHub'])
+    expect(units.map((u) => u.label)).toEqual(['姓名', '手机', '邮箱', 'GitHub', '主页'])
     expect(units[1].content).toBe('000-0000-0000')
   })
 

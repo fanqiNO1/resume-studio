@@ -228,7 +228,7 @@ JSON 统一：UTF-8、2 空格缩进、key 顺序稳定、数组顺序即语义�
   "schemaVersion": 1,
   "basics": {
     "name": "示例人",
-    "nameEn": "Sample Person",
+    "nameEn": "Sample Person",                       // 英文名：不渲染，只用于论文作者名标记
     "aliases": ["Sample Person", "示例人"],          // 论文作者列表里自动加粗/下划线的匹配名
     "photo": "assets/avatar.jpg",
     "contacts": [
@@ -263,16 +263,17 @@ JSON 统一：UTF-8、2 空格缩进、key 顺序稳定、数组顺序即语义�
 | `custom` | title\* / subtitle, dateRight, summary, bullets | visible, order, detail, bulletInclude, overrides |
 
 > **v5 字段审计**：删掉了一批"定义了但不进 PDF"的字段。原则是**编辑器里能填的，就必须能在预览里看到效果** —— 否则用户填了半天没反应，比没有这个字段更糟。
-> - 真死字段（无渲染、无 UI、无计划）：`basics.nameEn`、`basics.headline`、`ParagraphBlock.muted`（所有调用点都传 false 且无人读）、`template.builtin`、`breaking.atomicBullets`（分页器里 bullet 本就原子）
+> - 真死字段（无渲染、无 UI、无计划）：`basics.headline`、`ParagraphBlock.muted`（所有调用点都传 false 且无人读）、`template.builtin`、`breaking.atomicBullets`（分页器里 bullet 本就原子）
 > - 能填但不渲染：`education.location/courses/thesis`、`experience.location`、`publication.year`（会议名已含年份）、`publication.links`/`project.links`（连同 `Link` 类型）、`project.tech`
 > - `award` 是单行内容，不给 `bullets`：要点入口反而误导。`skill`（category/items 的单行技能行）后来整体移除，不再存在
 > - v5.1 追加删除：`education.rank`、`education.bullets`（教育条目不需要子要点）、`publication.status`（三档里只有 `underReview` 会渲染出「(在投)」，而会议名本身已说明状态 —— `arXiv preprint, 2026` 就是预印本）
 > - v5.1 追加实现：`publication.links`（纯 URL 数组）渲染成**会议名后的链接图标**。位置与形式的理由见下方说明
 > - 保留：`photo` + `layout.showPhoto`、`layout.pageNumber`、`templateOverrides` —— 都是有明确计划的 TODO（§12）；`aliases` 在用（作者名标记），只是暂无编辑器入口
+> - 复活：`basics.nameEn`（英文名）—— 论文作者列表里写的是英文名（"Qi Fan"），而抬头写的是中文名，只靠 `basics.name` 匹配不上，"自己的名字加下划线"就没了效果。现在它在编辑器里是一个独立输入槽，**不进 PDF**：只参与作者名匹配。它的作用是可见的（下划线会出现在预览里），所以不算 v5 删掉的"填了没反应"那类字段
 
 **论文渲染模式（作者列表始终完整展示）**
 
-原始需求第 2 点否掉了"缩成一作简述"的方案，所以三档都保留完整作者，自己的名字加粗 + 下划线（`aliases` 匹配）：
+原始需求第 2 点否掉了"缩成一作简述"的方案，所以三档都保留完整作者，自己的名字加粗 + 下划线（匹配集合 = `basics.name` + `basics.nameEn` + `basics.aliases`）：
 
 | `render` | 输出 | 行数 |
 |---|---|---|
@@ -412,6 +413,8 @@ zod 定义 schema + `schemaVersion` + `src/schema/migrations/00x.ts` 顺序迁�
 - override 的字段：左侧橙色竖条 + hover 显示继承值 + `↺` 恢复继承。
 - 日期：`YYYY` / `YYYY.MM` / `至今` 宽松输入 + 校验提示，不用 date picker（粒度粗，picker 更慢）。
 - **是否公开**：基本信息区顶部单选。选「是」后校验器对任何 `sensitive: true` 的联系方式、身份证/生日等字段主动告警（对应你第 13 点）。
+- **基本信息区**：姓名 / 英文名（只用于论文作者名标记，不进 PDF）/ 目标岗位全称 / 文件名模板 / 备注。
+- **联系方式**：内容池级，每行可改类型（手机号、邮箱、GitHub、个人主页、微信、LinkedIn、城市、其他）、展示文案、链接地址、敏感标记；左侧勾选决定本岗位展示哪些；可新增、可删除（删除要先确认）。新增的联系方式默认在当前岗位勾上。
 - 自动保存：防抖 400ms → `PUT /api/…`（原子写：临时文件 + rename）。`Ctrl+S` 立即保存。
 - 撤销/重做：`Ctrl+Z` / `Ctrl+Shift+Z`，store 快照环形缓冲 100 步（数据量小，直接存 JSON 快照）。
 

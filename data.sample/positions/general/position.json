@@ -21,7 +21,8 @@
   "contactInclude": [
     "c_phone",
     "c_mail",
-    "c_gh"
+    "c_gh",
+    "c_home"
   ],
   "sections": [
     {
